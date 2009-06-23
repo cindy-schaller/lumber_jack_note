@@ -1,0 +1,13 @@
+<p>
+  <b>Title:</b>
+  <%=h @note.title %>
+</p>
+
+<p>
+  <b>Note:</b>
+  <%=h @note.body %>
+</p>
+
+
+<%= link_to 'Edit', polymorphic_url([@notable, @note], :action => 'edit') %> |
+<%= link_to 'Back', url_for(@notable) %>

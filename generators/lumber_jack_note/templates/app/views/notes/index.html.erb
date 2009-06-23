@@ -1,0 +1,22 @@
+<h1>Listing notes</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Note</th>
+  </tr>
+
+<% @notes.each do |note| %>
+  <tr>       
+    <td><%=h note.title %></td>
+    <td><%=h note.note %></td>
+    <td><%= link_to 'Show', polymorphic_url([note.notable, note]) %></td>
+    <td><%= link_to 'Edit', polymorphic_url([note.notable, note], :action => 'edit') %></td>
+    <td><%= link_to 'Destroy', polymorphic_url([note.notable, note]), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New note', polymorphic_url([@notable, note.new], :action => 'new') %> | <%= link_to 'Back', url_for(@notable) %>

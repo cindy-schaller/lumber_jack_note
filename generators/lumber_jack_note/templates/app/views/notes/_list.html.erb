@@ -1,0 +1,23 @@
+<h3>Notes:</h3>
+<table id="two-col-display">
+	<tr>
+		<th class="col-one">Date Created</th>
+		<th>Title / Action</th>
+	</tr>	
+	<% notable.notes.each do |note| %>
+	  <%# content_tag_for :tr, note do %>
+    <tr>
+    	<td class="col-one"><%=h note.created_at.to_date.to_s(:db) %></td>
+    	<td><strong><%= h note.title %></strong>&nbsp; 
+	      <%= link_to image_tag('note_edit.png'), polymorphic_url([note.notable, note], :action => 'edit') %> 
+        <%= link_to image_tag('note_delete.png'), polymorphic_url([note.notable, note]), :confirm => 'Are you sure?', :method => :delete %>
+        <span class="handle"><%= image_tag('arrow_switch.png') %></span>&nbsp;&nbsp;
+	      <% unless note.body.blank? %><pre><%= h note.body %></pre><% end %>       
+		  </td>
+    </tr>    
+    <% end %>  
+  <%# end %>
+  <li><%= link_to image_tag('note_add.png'), polymorphic_url([notable, Note.new], :action => 'new') %></li>
+</table>
+
+

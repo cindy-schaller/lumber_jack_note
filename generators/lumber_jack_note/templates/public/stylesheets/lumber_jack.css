@@ -1,0 +1,38 @@
+li .handle {
+/*  font-size: 12px;*/
+  cursor: move;
+/*  color: #777;*/
+}
+
+.gray_box {
+  background: #E5E5E5;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -ie-border-radius: 5px;
+}
+
+img{
+  border-style: none;
+}
+
+pre {
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+#two-col-display {
+	width: 75%;
+	table-layout: fixed;	
+}
+
+#two-col-display .col-one {
+  width: 100px;
+}
+
+#two-col-display td {
+  vertical-align: top;
+}
