@@ -11,32 +11,33 @@ module LumberJack
         class_eval <<-EOV
           include LumberJack::Notable::InstanceMethods
           
-          def self.find_all_by_note(params = {})
-            # Searches the notes table for the specified note and returns
+          def self.find_all_by_note(body)
+            # Searches the notes table for the specified note body and returns 
             # an array of Notable objects
-            nb = []
-            Note.find(:all, :conditions => ["title LIKE ? OR body LIKE ?", params[:title] + '%', params[:body] + '%']).each do |n|
-            nb << t.notable_type.classify.constantize.find(n.notable_id)
+            na = []
+            Note.find(:all, :conditions => ["body = ?", body.to_s]).each do |t|
+              na << t.notable_type.classify.constantize.find(t.notable_id)
             end
-            nb
+            na
           end
         EOV
       end # def
     end # module
+
     
-      
+    
     
     module InstanceMethods
-      def note_for(body)
+      def note_for(title)
         self.notes.find(
-          :first, 
-          :conditions => ["body LIKE ?", "%#{body}%"],
-          :order => 'position asc')
-      end # def
+            :first, 
+            :conditions => ["title LIKE ?", "#{title}"], 
+            :order => 'position asc')
+        end # def
       
-      def note_best
-         self.notes.find(:first, :order => 'position asc')
-      end
+        def note_best
+          self.notes.find(:first, :order => 'position asc')
+        end
       
       def method_missing(method_id, *arguments)
         if match = /note_for_([_a-zA-Z]\w*)/.match(method_id.to_s)
@@ -51,4 +52,6 @@ module LumberJack
     end # module InstanceMethods
   end # module Notable
 end # module LumberJack
-      
+
+
+

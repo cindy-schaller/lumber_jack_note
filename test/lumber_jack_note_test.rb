@@ -32,8 +32,6 @@ def teardown_db
   end
 end
 
-
-
 class Organization < ActiveRecord::Base
   has_many_notes
 end
@@ -46,8 +44,8 @@ class LumberJackNoteTest < Test::Unit::TestCase
     setup_db
     (1..2).each { |i| Organization.create :name => "Organization #{i}"}
     @o1 = Organization.find(1)
-    @o1.notes.build(:body => 'note body 1', :title => 'note title 1')
-    @o1.notes.build(:body => 'note body 2', :title => 'note title 2')
+    @o1.notes.build(:body => 'note 1', :title => 'title1')
+    @o1.notes.build(:body => 'note 2', :title => 'title2')
     @o1.save
     @o2 = Organization.find(2)
   end
@@ -56,7 +54,6 @@ class LumberJackNoteTest < Test::Unit::TestCase
        teardown_db
   end
   
-
   def test_create_and_count_organizations_and_notes
       assert_equal 2, Organization.count
       assert_equal 2, @o1.notes.count
@@ -64,15 +61,24 @@ class LumberJackNoteTest < Test::Unit::TestCase
     end
   
   def test_find_all_by_note
-    assert_equal 'Organization 1', Organization.find_all_by_note('note body 1')[0].name
-    assert_equal 0, Organization.find_all_by_note('note body 1').size
+    assert_equal 'Organization 1', Organization.find_all_by_note('note 1')[0].name
+    assert_equal 0, Organization.find_all_by_note('note test').size
     assert_equal 0, Organization.find_all_by_note(nil).size
   end
-  
+
   def test_note_for
-    assert_equal 'note body 1', @o1.note_for('note 1').to_s
+    assert_equal 'note 1', @o1.note_for('title1').to_s
     assert_equal '', @o2.note_for(nil).to_s
   end  
   
+  def test_note_for_method_missing
+    assert_equal 'note 1', @o1.note_for_title1.to_s
+    assert_equal '', @o1.note_for_titel3.to_s
+    assert_equal '', @o2.note_for_titel4.to_s
+  end
   
+  def test_note_best
+    assert_equal 'note 1', @o1.note_best.to_s
+  end
+
 end
