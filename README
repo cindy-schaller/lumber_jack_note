@@ -1,13 +1,82 @@
-LumberJackNote
-==============
+Please read 'about_lumber_jack' for more background on this project.
 
-Introduction goes here.
+LumberJack::Note
+=====================
+This plugin installs a polymorphic Note model into your application.
+After it is installed, you will be able to associate multiple Notes with
+any model in your application. You will also have a polymorphic controller and
+views to re-use on all of your associated models.
 
+In addition to associating several Notes with your Model, you will also
+gain some helper methods to manage Model and Notes. Here is a brief
+example:
 
-Example
-=======
+organization.rb:
+---------------
+  class Organization < ActiveRecord::Base
+    has_many_notes
+  end
 
-Example goes here.
+Your Organization model now has the usual 'has_many' functionality plus some
+additional methods:
 
+  Organization.find_all_by_note('number') => array of Organization models for that
+  'number'.
+  o = Organization.find(1)
+  o.note_for('title') => The note object for that 'title'.
+  o.note_for_title => The same thing called differently
+  o.note_best => The note object that you have sorted to the top of the list.
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+routes.rb:
+---------
+  map.resources :people, :has_many => :notes
+
+Your OrganizationController now has access to the polymorphic NotesController
+and the views required to manage Notes for people.
+
+Plugin Installation for a brand new project:
+===========================================
+0)  Rails 2.3.2 or higher & SQLite3!
+1)  Create a new rails project: 'rails test_note'
+2)  Move into your new directory
+3)  'script/generate scaffold Organization name:string'
+4)  'script/generate scaffold Organization name:string'
+5)  'script/plugin install acts_as_list'
+6)  Install LumberJack:
+    'script/plugin install git://github.com/brianlong/lumber_jack_note.git'
+7)  'script/generate lumber_jack_note'
+8)  add this to 'app/models/organization.rb' & 'app/models/people.rb'
+      has_many_notes #(Put it right after the class definition)
+9)  Move 'views/layouts/organizations.html.erb' to
+      'views/layouts/application.html.erb'
+      (Not sure why Rails does not create this file)
+10) Delete 'views/layouts/organizations.html.erb'
+      & 'views/layouts/people.html.erb'
+11)  Modify 'views/layouts/application.html.erb' to include this in the
+      <head> section:
+        <%= stylesheet_link_tag 'scaffold', 'lumber_jack' %>
+        <%= javascript_include_tag :defaults %>
+12)  Modify 'config/routes.rb' as follows:
+      map.resources :organizations, :has_many => :notes
+      map.resources :people, :has_many => :notes
+      map.root :controller => "organizations"
+13) Delete 'public/index.html'
+14) Add this partial reference to 'app/views/organizations/show.html.erb':
+    <%= render :partial => 'notes/list',
+      :locals => {:notable => @organization} %>
+15) Add this partial reference to 'app/views/people/show.html.erb':
+    <%= render :partial => 'notes/list',
+      :locals => {:notable => @person} %>
+16) rake db:create
+17) rake db:migrate
+18) script/server
+19) Create an Organization and a Organization then add some notes for each
+20) Use script/console to check out some methods that the plugin adds to your
+    models:
+  Model.find_all_by_note('title') => array of Models for that number
+  p = Model.find(1)
+  p.note_for('title') => The note object for that 'title'.
+  p.note_for_title => The same thing called differently
+  p.note_best => The note object that you have sorted to the top of the list.
+
+Copyright (c) 2009 Brian K. Long, released under the MIT license
